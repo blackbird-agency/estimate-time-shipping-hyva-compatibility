@@ -1,0 +1,15 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div
+    x-data="estimateTimeShipping({
+        type: 'product',
+        currentSku: '<?= $escaper->escapeJs($block->getProduct()->getSku()) ?>'
+    })"
+    x-init="init()"
+    x-on:customer-data-reload.window="fetchEstimatedDate()"
+    class="message edd-date rounded p-3 my-3"
+    :class="{'bg-green-50 text-green-700': isSuccess, 'bg-blue-50 text-blue-700': !isSuccess && hasDate}"
+    x-text="estimatedDate"
+></div>

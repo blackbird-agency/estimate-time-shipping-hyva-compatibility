@@ -1,0 +1,29 @@
+<?php
+/** @var ItemDates $block */
+
+use Blackbird\EstimateTimeShipping\Helper\Data;
+use Blackbird\HyvaEstimateTimeShipping\Block\Checkout\ItemDates;
+use Magento\Framework\App\ObjectManager;
+
+$helper = ObjectManager::getInstance()->get(Data::class);
+
+if ($helper->getProductCheckoutDisplay()):
+    $items = $block->getQuoteItems();
+    ?>
+    <?php foreach ($items as $item): ?>
+        <div
+            x-data="estimateTimeShipping({
+                type: 'checkout',
+                currentSku: '<?= $item->getSku() ?>'
+            })"
+            x-init="init(); getItemValue('<?= $item->getItemId() ?>')"
+            class="message edd-item rounded p-2"
+            :class="{
+              'bg-green-50 text-green-700': isSuccess,
+              'bg-blue-50 text-blue-700': !isSuccess && hasDate
+            }"
+        >
+            <span x-text="estimatedDate"></span>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

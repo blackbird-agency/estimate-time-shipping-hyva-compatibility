@@ -1,0 +1,37 @@
+<?php
+/** @var Template $block */
+
+use Blackbird\EstimateTimeShipping\Helper\Data;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\View\Element\Template;
+
+$helper = ObjectManager::getInstance()->get(Data::class);
+
+if ($helper->getOrderCheckoutDisplay()):
+?>
+<div
+    id="estimated-delivery-date"
+    x-data="estimateTimeShipping({
+        type: 'checkout',
+        currentSku: ''
+    })"
+    x-init="init()"
+    class="message edd-date rounded p-3 my-3"
+    :class="{
+        'bg-green-50 text-green-700': isSuccess,
+        'bg-blue-50 text-blue-700': !isSuccess && hasDate
+    }"
+    x-text="estimatedDate"
+></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.Alpine && typeof window.Alpine.initializeComponent === 'function') {
+            const component = document.getElementById('estimated-delivery-date');
+            if (component && !component.__x) {
+                window.Alpine.initializeComponent(component);
+            }
+        }
+    });
+</script>
+<?php endif; ?>

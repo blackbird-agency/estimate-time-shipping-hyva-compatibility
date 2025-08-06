@@ -1,0 +1,22 @@
+<?php
+/**
+ * Blackbird EstimateTimeShipping Module - Hyva compatibility
+ *
+ * NOTICE OF LICENSE
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to support@bird.eu so we can send you a copy immediately.
+ *
+ * @category        Blackbird
+ * @package         Blackbird_HyvaEstimateTimeShipping
+ * @copyright       Copyright (c) 2018 Blackbird (https://black.bird.eu)
+ * @author          Blackbird Team
+ * @license         https://store.bird.eu/license/
+ * @support         support@bird.eu
+ */
+?>
+<?php if ($this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) : ?>
+    <th scope="col" class="col deliverydate px-4 py-2 font-medium text-gray-700">
+        <?= /* @escapeNotVerified */ __('Estimated Delivery Date') ?>
+    </th>
+<?php endif; ?>

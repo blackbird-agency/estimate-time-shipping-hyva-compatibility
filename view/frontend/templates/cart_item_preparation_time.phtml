@@ -1,0 +1,38 @@
+<?php
+/**
+ * Blackbird EstimateTimeShipping Module - Hyva compatibility
+ *
+ * NOTICE OF LICENSE
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to support@bird.eu so we can send you a copy immediately.
+ *
+ * @category        Blackbird
+ * @package         Blackbird_HyvaEstimateTimeShipping
+ * @copyright       Copyright (c) 2018 Blackbird (https://black.bird.eu)
+ * @author          Blackbird Team
+ * @license         https://store.bird.eu/license/
+ * @support         support@bird.eu
+ */
+?>
+<?php
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Catalog\Block\Product\View $block */
+/** @var \Magento\Quote\Model\Quote\Item $item */
+$item    = $block->getItem();
+$itemId  = $item->getId();
+$itemSku = $item->getSku();
+?>
+<?php if (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) : ?>
+    <div
+        x-data="estimateTimeShipping({
+            type: 'item',
+            currentSku: '<?= $escaper->escapeJs($itemSku) ?>'
+        })"
+        x-init="init()"
+        x-on:customer-data-reload.window="fetchEstimatedDate()"
+        class="message edd-date rounded p-2 my-2"
+        :class="{'bg-green-50 text-green-700': isSuccess, 'bg-blue-50 text-blue-700': !isSuccess && hasDate}"
+        x-text="estimatedDate"
+    ></div>
+<?php endif; ?>
