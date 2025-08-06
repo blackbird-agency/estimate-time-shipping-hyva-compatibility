@@ -23,7 +23,7 @@ document.addEventListener('alpine:init', () => {
         init() {
             this.fetchEstimatedDate();
 
-            const selectors = [
+            const watchers = [
                 'select[name="region_id"]',
                 'select[name="country_id"]',
                 'input[name="region"]',
@@ -32,17 +32,14 @@ document.addEventListener('alpine:init', () => {
                 '.product-custom-option',
                 '#qty'
             ];
-
-            selectors.forEach(selector => {
-                document.addEventListener('change', (e) => {
-                    if (e.target.matches(selector)) {
-                        this.fetchEstimatedDate();
-                    }
-                });
-            });
+            watchers.forEach(sel =>
+                document.addEventListener('change', e =>
+                    e.target.matches(sel) && this.fetchEstimatedDate()
+                )
+            );
 
             if (config.type === 'product') {
-                const sections = [
+                const relevantSections = [
                     'product_data_storage',
                     'customer',
                     'cart',
@@ -50,9 +47,8 @@ document.addEventListener('alpine:init', () => {
                     'checkout-data',
                     'cart-data'
                 ];
-
-                document.addEventListener('customer-data-reload', (e, changedSections) => {
-                    if (changedSections && changedSections.some(s => sections.includes(s))) {
+                document.addEventListener('customer-data-reload', (e, changed) => {
+                    if (changed?.some(s => relevantSections.includes(s))) {
                         this.fetchEstimatedDate();
                     }
                 });
@@ -60,75 +56,57 @@ document.addEventListener('alpine:init', () => {
         },
 
         getCartData() {
-            return {
-                'region_id': document.querySelector('select[name="region_id"]')?.value || '',
-                'country_id': document.querySelector('select[name="country_id"]')?.value || '',
-                'region': document.querySelector('input[name="region"]')?.value || '',
-                'postcode': document.querySelector('input[name="postcode"]')?.value || ''
-            };
+            const fields = ['region_id', 'country_id', 'region', 'postcode'];
+            return fields.reduce((acc, name) => {
+                const el = document.querySelector(
+                    name.includes('_') ? `select[name="${name}"]` : `input[name="${name}"]`
+                );
+                acc[name] = el?.value || '';
+                return acc;
+            }, {});
+        },
+
+        buildBaseUrl() {
+            let base = window.BASE_URL || '';
+            if (!base) {
+                const parts = window.location.pathname.split('/');
+                base = window.location.origin + (parts[1] ? '/' + parts[1] : '');
+            }
+            return base.endsWith('/') ? base : base + '/';
+        },
+
+        buildParams(itemId) {
+            const params = new URLSearchParams({
+                type: config.type || 'checkout',
+                isAjax: 'true'
+            });
+
+            if (config.type === 'product') {
+                params.append('currentSku', config.currentSku || '');
+                params.append('qty', document.querySelector('#qty')?.value || '1');
+            } else {
+                if (config.type === 'checkout') {
+                    params.set('type', 'cart');
+                }
+                params.append('address', JSON.stringify(this.getCartData()));
+                const method = window.checkoutData?.getSelectedShippingRate();
+                if (method) params.append('method', method);
+            }
+
+            if (itemId) {
+                params.append('itemId', itemId);
+            }
+
+            return params;
         },
 
         async fetchEstimatedDate(itemId = null) {
             try {
-                let baseUrl = window.BASE_URL || '';
-                if (!baseUrl) {
-                    const pathArray = window.location.pathname.split('/');
-                    baseUrl = window.location.origin + (pathArray[1] ? '/' + pathArray[1] : '');
-                }
-
-                if (baseUrl && !baseUrl.endsWith('/')) {
-                    baseUrl += '/';
-                }
-
-                const cartData = {
-                    'region_id': document.querySelector('select[name="region_id"]')?.value || '',
-                    'country_id': document.querySelector('select[name="country_id"]')?.value || '',
-                    'region': document.querySelector('input[name="region"]')?.value || '',
-                    'postcode': document.querySelector('input[name="postcode"]')?.value || ''
-                };
-
-                const params = new URLSearchParams();
-
-                // Add parameters based on the type
-                params.append('type', config.type || 'checkout');
-                params.append('isAjax', 'true');
-
-                if (config.type === 'product') {
-                    params.append('currentSku', config.currentSku || '');
-                    params.append('qty', document.querySelector('#qty')?.value || '1');
-                }
-                else if (config.type === 'checkout') {
-                    params.set('type', 'cart');
-                    params.append('address', JSON.stringify(cartData));
-
-                    const shippingMethod = window.checkoutData?.getSelectedShippingRate() || '';
-                    if (shippingMethod) {
-                        params.append('method', shippingMethod);
-                    }
-                }
-                else if (config.type === 'cart') {
-                    params.append('address', JSON.stringify(cartData));
-
-                    const shippingMethod = window.checkoutData?.getSelectedShippingRate() || '';
-                    if (shippingMethod) {
-                        params.append('method', shippingMethod);
-                    }
-                }
-
-                if (itemId) {
-                    params.append('itemId', itemId);
-                }
-
+                const baseUrl = this.buildBaseUrl();
                 const url = `${baseUrl}estimatetimeshipping/estimation/quoteDate`;
-                console.log('Fetching estimated date from:', url, 'with params:', params.toString());
+                const params = this.buildParams(itemId);
 
-                console.log('Request details:', {
-                    url: url,
-                    params: Object.fromEntries(params.entries()),
-                    baseUrl: baseUrl,
-                    config: config,
-                    cartData: cartData
-                });
+                console.log('Fetching estimation:', url, params.toString());
 
                 const response = await fetch(`${url}?${params}`, {
                     method: 'GET',
@@ -139,66 +117,41 @@ document.addEventListener('alpine:init', () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Server responded with status: ${response.status}`);
+                    throw new Error(`Status ${response.status}`);
                 }
 
-                const contentType = response.headers.get('content-type');
                 let data;
-
-                if (!contentType || !contentType.includes('application/json')) {
-                    try {
-                        const text = await response.text();
-                        console.warn('Response content-type is not application/json:', contentType);
-                        console.log('Response text (first 200 chars):', text.substring(0, 200) + (text.length > 200 ? '...' : ''));
-
-                        const jsonMatch = text.match(/\{.*\}/s);
-                        if (jsonMatch) {
-                            console.log('Found JSON in response:', jsonMatch[0]);
-                            data = JSON.parse(jsonMatch[0]);
-                        } else {
-                            throw new Error('Could not find JSON in response');
-                        }
-                    } catch (parseError) {
-                        console.error('Failed to parse response as JSON:', parseError);
-                        data = {
-                            preparationDate: 'Estimated date not available',
-                            dateExist: false,
-                            display: true
-                        };
-                    }
-                } else {
+                const contentType = response.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
                     data = await response.json();
+                } else {
+                    const text = await response.text();
+                    const match = text.match(/\{[\s\S]*\}/);
+                    data = match ? JSON.parse(match[0]) : {};
                 }
-
-                console.log('Processed data:', data);
 
                 if (+data.display && !data.dateExist) {
                     this.estimatedDate = data.preparationDate;
-                    this.isSuccess = false;
-                    this.hasDate = true;
+                    this.isSuccess     = false;
+                    this.hasDate       = true;
                 } else if (data.dateExist) {
                     this.estimatedDate = data.preparationDate;
-                    this.isSuccess = true;
-                    this.hasDate = true;
+                    this.isSuccess     = true;
+                    this.hasDate       = true;
                 } else {
                     this.estimatedDate = '';
-                    this.isSuccess = false;
-                    this.hasDate = false;
+                    this.isSuccess     = false;
+                    this.hasDate       = false;
                 }
-            } catch (error) {
-                console.error('Error fetching estimated date:', error);
+            } catch (err) {
+                console.error('Error fetching estimated date:', err);
                 this.estimatedDate = 'Estimated delivery date is currently unavailable. Please try again later.';
-                this.isSuccess = false;
-                this.hasDate = true;
+                this.isSuccess     = false;
+                this.hasDate       = true;
             }
         },
 
-        getValue() {
-            this.fetchEstimatedDate();
-        },
-
-        getItemValue(itemId) {
-            this.fetchEstimatedDate(itemId);
-        }
+        getValue()     { this.fetchEstimatedDate(); },
+        getItemValue(id) { this.fetchEstimatedDate(id); }
     }));
 });
