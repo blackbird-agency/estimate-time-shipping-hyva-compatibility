@@ -7,7 +7,7 @@ use Magento\Framework\View\Element\Template;
 
 $helper = ObjectManager::getInstance()->get(Data::class);
 
-if ($helper->getOrderCheckoutDisplay()):
+if ($helper->getHowToDisplay()):
 ?>
 <div
     id="estimated-delivery-date"
@@ -23,15 +23,4 @@ if ($helper->getOrderCheckoutDisplay()):
     }"
     x-text="estimatedDate"
 ></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.Alpine && typeof window.Alpine.initializeComponent === 'function') {
-            const component = document.getElementById('estimated-delivery-date');
-            if (component && !component.__x) {
-                window.Alpine.initializeComponent(component);
-            }
-        }
-    });
-</script>
 <?php endif; ?>

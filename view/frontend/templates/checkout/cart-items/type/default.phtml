@@ -1,0 +1,65 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Blackbird\EstimateTimeShipping\Helper\Data;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Checkout\ViewModel\Checkout\Formatter as FormatterViewModel;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var FormatterViewModel $formatterViewModel */
+
+$formatterViewModel = $viewModels->require(FormatterViewModel::class);
+
+$helper = ObjectManager::getInstance()->get(Data::class);
+
+$quoteItem = $block->getData('quote_item');
+$options = $quoteItem['options'] ?? null;
+?>
+<?php if ($options): ?>
+    <table class="leading-relaxed text-sm table-auto">
+        <tbody>
+        <?php foreach ($options as $option): ?>
+            <tr>
+                <td>
+                    <?= $escaper->escapeHtml(__($option['label'])) ?>:
+                </td>
+
+                <td class="w-full pl-4">
+                    <?= /* @noEscape */ __($option['value']) ?>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+<?php endif ?>
+<?php if(!$helper->getHowToDisplay() && $helper->getProductCheckoutDisplay()): ?>
+    <?php
+    $quoteItemId = $quoteItem['item_id'] ?? '';
+    ?>
+    <div
+        x-data="estimateTimeShipping({
+            type: 'checkout'
+            currentSku: ''
+            itemId: '<?= $escaper->escapeJs($quoteItemId) ?>'
+        })"
+        x-init="init()"
+        class="message edd-date rounded p-3 my-3"
+        :class="{
+            'bg-green-50 text-green-700': isSuccess,
+            'bg-blue-50 text-blue-700': !isSuccess && hasDate
+        }"
+        x-text="estimatedDate"
+    ></div>
+<?php endif; ?>

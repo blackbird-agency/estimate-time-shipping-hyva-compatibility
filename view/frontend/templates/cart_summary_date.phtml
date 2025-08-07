@@ -20,6 +20,7 @@
 ?>
 <?php if ($this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) : ?>
     <div
+        id="preparation-time-cart"
         x-data="estimateTimeShipping({
             type: 'cart',
             currentSku: '-1'
@@ -31,3 +32,8 @@
         x-text="estimatedDate"
     ></div>
 <?php endif; ?>
+<script>
+    console.log('HyvaEstimateTimeShipping')
+    console.log('checkout - cart summary date');
+    console.log('getHowToDisplay() : <?= ($this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) ?>')
+</script>

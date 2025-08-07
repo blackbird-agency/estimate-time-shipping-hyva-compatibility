@@ -21,8 +21,7 @@ document.addEventListener('alpine:init', () => {
         hasDate: false,
 
         init() {
-            this.fetchEstimatedDate();
-
+            this.fetchEstimatedDate(config.itemId);
             const watchers = [
                 'select[name="region_id"]',
                 'select[name="country_id"]',
@@ -34,7 +33,7 @@ document.addEventListener('alpine:init', () => {
             ];
             watchers.forEach(sel =>
                 document.addEventListener('change', e =>
-                    e.target.matches(sel) && this.fetchEstimatedDate()
+                    e.target.matches(sel) && this.fetchEstimatedDate(config.itemId)
                 )
             );
 
@@ -49,7 +48,7 @@ document.addEventListener('alpine:init', () => {
                 ];
                 document.addEventListener('customer-data-reload', (e, changed) => {
                     if (changed?.some(s => relevantSections.includes(s))) {
-                        this.fetchEstimatedDate();
+                        this.fetchEstimatedDate(config.itemId);
                     }
                 });
             }
@@ -93,8 +92,8 @@ document.addEventListener('alpine:init', () => {
                 if (method) params.append('method', method);
             }
 
-            if (itemId) {
-                params.append('itemId', itemId);
+            if (itemId || config.itemId) {
+                params.append('itemId', itemId || config.itemId);
             }
 
             return params;

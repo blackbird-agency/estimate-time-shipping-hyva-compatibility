@@ -18,6 +18,18 @@
                 after="-"
             />
         </referenceContainer>
+        <referenceContainer name="checkout.price-summary.section">
+            <!-- Override the default product type renderer to include estimated dates -->
+            <referenceBlock name="price-summary.cart-items">
+                <referenceBlock name="cart-items.product-type-renderers">
+                    <referenceBlock name="product-type.simple">
+                        <action method="setTemplate">
+                            <argument name="template" xsi:type="string">Blackbird_HyvaEstimateTimeShipping::checkout/cart-items/type/default.phtml</argument>
+                        </action>
+                    </referenceBlock>
+                </referenceBlock>
+            </referenceBlock>
+        </referenceContainer>
     </body>
 </page>
 

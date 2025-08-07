@@ -25,6 +25,7 @@ $itemSku = $item->getSku();
 ?>
 <?php if (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) : ?>
     <div
+        id="preparation-time-<?= $escaper->escapeHtmlAttr($itemId) ?>"
         x-data="estimateTimeShipping({
             type: 'item',
             currentSku: '<?= $escaper->escapeJs($itemSku) ?>'
@@ -36,3 +37,8 @@ $itemSku = $item->getSku();
         x-text="estimatedDate"
     ></div>
 <?php endif; ?>
+<script>
+    console.log('HyvaEstimateTimeShipping')
+    console.log('checkout - item preparation time');
+    console.log('getHowToDisplay() : <?= (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) ?>')
+</script>
