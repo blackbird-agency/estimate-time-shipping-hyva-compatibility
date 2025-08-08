@@ -44,22 +44,20 @@ $options = $quoteItem['options'] ?? null;
         </tbody>
     </table>
 <?php endif ?>
+
+<!-- Override to show the estimated time shipping -->
 <?php if(!$helper->getHowToDisplay() && $helper->getProductCheckoutDisplay()): ?>
     <?php
     $quoteItemId = $quoteItem['item_id'] ?? '';
     ?>
     <div
         x-data="estimateTimeShipping({
-            type: 'checkout'
-            currentSku: ''
+            type: 'checkout',
+            currentSku: '',
             itemId: '<?= $escaper->escapeJs($quoteItemId) ?>'
         })"
         x-init="init()"
-        class="message edd-date rounded p-3 my-3"
-        :class="{
-            'bg-green-50 text-green-700': isSuccess,
-            'bg-blue-50 text-blue-700': !isSuccess && hasDate
-        }"
+        class="message edd-date rounded p-3 my-3 bg-green-50 text-green-700"
         x-text="estimatedDate"
     ></div>
 <?php endif; ?>

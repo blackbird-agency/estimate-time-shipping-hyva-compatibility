@@ -27,13 +27,7 @@
         })"
         x-init="init()"
         x-on:customer-data-reload.window="fetchEstimatedDate()"
-        class="message edd-date rounded p-3 my-3 border-t border-gray-200 pt-4"
-        :class="{'bg-green-50 text-green-700': isSuccess, 'bg-blue-50 text-blue-700': !isSuccess && hasDate}"
+        class="message edd-date rounded p-3 my-3 border-t border-gray-200 pt-4 bg-green-50 text-green-700"
         x-text="estimatedDate"
     ></div>
 <?php endif; ?>
-<script>
-    console.log('HyvaEstimateTimeShipping')
-    console.log('checkout - cart summary date');
-    console.log('getHowToDisplay() : <?= ($this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) ?>')
-</script>

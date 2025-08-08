@@ -7,7 +7,7 @@ use Magento\Framework\View\Element\Template;
 
 $helper = ObjectManager::getInstance()->get(Data::class);
 
-if ($helper->getHowToDisplay()):
+if ($helper->getHowToDisplay() && $helper->getOrderCheckoutDisplay()):
 ?>
 <div
     id="estimated-delivery-date"
@@ -16,11 +16,7 @@ if ($helper->getHowToDisplay()):
         currentSku: ''
     })"
     x-init="init()"
-    class="message edd-date rounded p-3 my-3"
-    :class="{
-        'bg-green-50 text-green-700': isSuccess,
-        'bg-blue-50 text-blue-700': !isSuccess && hasDate
-    }"
+    class="message edd-date rounded p-3 my-3 bg-green-50 text-green-700"
     x-text="estimatedDate"
 ></div>
 <?php endif; ?>

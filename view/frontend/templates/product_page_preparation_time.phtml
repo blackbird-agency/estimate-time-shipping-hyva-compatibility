@@ -9,7 +9,6 @@
     })"
     x-init="init()"
     x-on:customer-data-reload.window="fetchEstimatedDate()"
-    class="message edd-date rounded p-3 my-3"
-    :class="{'bg-green-50 text-green-700': isSuccess, 'bg-blue-50 text-blue-700': !isSuccess && hasDate}"
+    class="message edd-date rounded p-3 my-3 bg-green-50 text-green-700"
     x-text="estimatedDate"
 ></div>

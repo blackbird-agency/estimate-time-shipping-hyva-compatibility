@@ -11,5 +11,9 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Cart\Item\Renderer">
+        <plugin name="blackbird_after_to_html"
+                type="Blackbird\HyvaEstimateTimeShipping\Plugin\InjectPreparationTimeHtml" />
+    </type>
 </config>
 

@@ -105,8 +105,6 @@ document.addEventListener('alpine:init', () => {
                 const url = `${baseUrl}estimatetimeshipping/estimation/quoteDate`;
                 const params = this.buildParams(itemId);
 
-                console.log('Fetching estimation:', url, params.toString());
-
                 const response = await fetch(`${url}?${params}`, {
                     method: 'GET',
                     headers: {

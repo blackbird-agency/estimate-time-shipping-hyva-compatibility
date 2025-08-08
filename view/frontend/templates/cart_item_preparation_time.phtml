@@ -23,22 +23,17 @@ $item    = $block->getItem();
 $itemId  = $item->getId();
 $itemSku = $item->getSku();
 ?>
-<?php if (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) : ?>
+<?php if (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay() &&
+        $this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getProductCartDisplay()) : ?>
     <div
         id="preparation-time-<?= $escaper->escapeHtmlAttr($itemId) ?>"
         x-data="estimateTimeShipping({
-            type: 'item',
+            type: 'product',
             currentSku: '<?= $escaper->escapeJs($itemSku) ?>'
         })"
         x-init="init()"
         x-on:customer-data-reload.window="fetchEstimatedDate()"
-        class="message edd-date rounded p-2 my-2"
-        :class="{'bg-green-50 text-green-700': isSuccess, 'bg-blue-50 text-blue-700': !isSuccess && hasDate}"
+        class="message edd-date rounded p-2 my-2 bg-green-50 text-green-700"
         x-text="estimatedDate"
     ></div>
 <?php endif; ?>
-<script>
-    console.log('HyvaEstimateTimeShipping')
-    console.log('checkout - item preparation time');
-    console.log('getHowToDisplay() : <?= (!$this->helper('Blackbird\EstimateTimeShipping\Helper\Data')->getHowToDisplay()) ?>')
-</script>
