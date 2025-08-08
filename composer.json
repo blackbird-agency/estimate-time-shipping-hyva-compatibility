@@ -3,7 +3,7 @@
     "description": "Hyva Theme compatibility module for EstimateTimeShipping",
     "require": {
         "blackbird/extensions-core": ">=100.0.9",
-        "blackbird/estimatetimeshipping": ">=100.1.15",
+        "blackbird/estimatetimeshipping": ">=100.1.16",
         "magento/framework": ">=101.0.0",
         "magento/module-sales": ">=101.0.0",
         "magento/module-sales-rule": ">=101.0.0",
