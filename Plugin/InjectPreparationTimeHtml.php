@@ -1,5 +1,5 @@
 <?php
-namespace Blackbird\HyvaEstimateTimeShipping\Plugin;
+namespace Blackbird\EstimateTimeShippingHyvaCompatibility\Plugin;
 
 use Blackbird\EstimateTimeShipping\Helper\Data;
 use Magento\Checkout\Block\Cart\Item\Renderer as SubjectRenderer;
@@ -35,7 +35,7 @@ class InjectPreparationTimeHtml
         $block = $subject->getLayout()
             ->createBlock(Template::class)
             ->setData('item', $subject->getItem())
-            ->setTemplate('Blackbird_HyvaEstimateTimeShipping::cart_item_preparation_time.phtml');
+            ->setTemplate('Blackbird_EstimateTimeShippingHyvaCompatibility::cart_item_preparation_time.phtml');
 
         $injectedHtml = $block->toHtml();
 

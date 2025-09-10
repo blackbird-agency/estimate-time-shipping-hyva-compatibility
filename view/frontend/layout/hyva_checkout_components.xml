@@ -14,7 +14,7 @@
         <referenceContainer name="checkout.section.additional-options">
             <block
                 name="checkout.estimated-date"
-                template="Blackbird_HyvaEstimateTimeShipping::checkout/estimated-date.phtml"
+                template="Blackbird_EstimateTimeShippingHyvaCompatibility::checkout/estimated-date.phtml"
                 after="-"
             />
         </referenceContainer>
@@ -24,7 +24,7 @@
                 <referenceBlock name="cart-items.product-type-renderers">
                     <referenceBlock name="product-type.simple">
                         <action method="setTemplate">
-                            <argument name="template" xsi:type="string">Blackbird_HyvaEstimateTimeShipping::checkout/cart-items/type/default.phtml</argument>
+                            <argument name="template" xsi:type="string">Blackbird_EstimateTimeShippingHyvaCompatibility::checkout/cart-items/type/default.phtml</argument>
                         </action>
                     </referenceBlock>
                 </referenceBlock>

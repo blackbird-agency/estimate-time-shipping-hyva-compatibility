@@ -6,14 +6,14 @@
             <argument name="compatModules" xsi:type="array">
                 <item name="blackbird-estimatetimeshipping-hyva-compatibility" xsi:type="array">
                     <item name="original_module" xsi:type="string">Blackbird_EstimateTimeShipping</item>
-                    <item name="compat_module"   xsi:type="string">Blackbird_HyvaEstimateTimeShipping</item>
+                    <item name="compat_module"   xsi:type="string">Blackbird_EstimateTimeShippingHyvaCompatibility</item>
                 </item>
             </argument>
         </arguments>
     </type>
     <type name="Magento\Checkout\Block\Cart\Item\Renderer">
         <plugin name="blackbird_after_to_html"
-                type="Blackbird\HyvaEstimateTimeShipping\Plugin\InjectPreparationTimeHtml" />
+                type="Blackbird\EstimateTimeShippingHyvaCompatibility\Plugin\InjectPreparationTimeHtml" />
     </type>
 </config>
 

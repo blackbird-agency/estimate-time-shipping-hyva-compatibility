@@ -9,7 +9,7 @@
  * to support@bird.eu so we can send you a copy immediately.
  *
  * @category        Blackbird
- * @package         Blackbird_HyvaEstimateTimeShipping
+ * @package         Blackbird_EstimateTimeShippingHyvaCompatibility
  * @copyright       Copyright (c) 2018 Blackbird (https://black.bird.eu)
  * @author          Blackbird Team
  * @license         https://store.bird.eu/license/
@@ -18,6 +18,6 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <script src="Blackbird_HyvaEstimateTimeShipping::js/estimate-time-shipping.js"/>
+        <script src="Blackbird_EstimateTimeShippingHyvaCompatibility::js/estimate-time-shipping.js"/>
     </head>
 </page>

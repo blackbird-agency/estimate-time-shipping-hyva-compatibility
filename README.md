@@ -21,7 +21,7 @@ Composer Package:
 ```composer require blackbird/estimatetimeshipping-hyva-compatibility```
 
 Zip Package:
-Unzip the package in app/code/Blackbird/HyvaEstimateTimeShipping, from the root of your Magento instance.
+Unzip the package in app/code/Blackbird/EstimateTimeShippingHyvaCompatibility, from the root of your Magento instance.
 
 
 ## Install the module
