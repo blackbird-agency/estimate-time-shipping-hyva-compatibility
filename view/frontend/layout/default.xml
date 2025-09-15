@@ -16,8 +16,13 @@
  * @support         support@bird.eu
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <script src="Blackbird_EstimateTimeShippingHyvaCompatibility::js/estimate-time-shipping.js"/>
-    </head>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block name="blackbird.estimate-time-shipping"
+                   template="Blackbird_EstimateTimeShippingHyvaCompatibility::page/js/estimate-time-shipping.phtml"
+            />
+        </referenceContainer>
+    </body>
 </page>
